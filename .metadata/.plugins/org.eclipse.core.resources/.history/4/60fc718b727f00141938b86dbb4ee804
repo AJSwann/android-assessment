@@ -1,0 +1,78 @@
+package test.employment.phototap;
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+ 
+public class GitHub extends Activity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.layout_github);
+        new GithubConnect().execute();
+    }
+ 
+    public class GithubConnect extends AsyncTask<String, String, String> {
+ 
+        final String TAG = "AsyncTaskParseJson.java";
+        String url = "https://api.github.com/repos/rails/rails/commits";  
+        
+        JSONArray dataJsonArr = null;
+ 
+        @Override
+        protected String doInBackground(String... arg0) {
+ 
+            try {
+                HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+                InputStream is = conn.getInputStream();
+                BufferedReader r = new BufferedReader(new InputStreamReader(is));
+                StringBuilder sb = new StringBuilder();
+                for(String line = r.readLine(); line != null; line = r.readLine()){
+                    sb.append(line);
+                }
+                JSONArray jsonArray = new JSONArray(sb.toString());
+                for(int i = 0; i < jsonArray.length(); i++){
+                    JSONObject currentObj = jsonArray.getJSONObject(i);
+                    String sha = currentObj.getString("sha");
+                     String sha = currentObj.getString("sha");
+                     // get commit  object
+                     JSONObject objcommit = obj.getJSONObject("commit"); 
+                     // get author  object
+                     JSONObject objauthor = objcommit.getJSONObject("author");
+                     String name = objauthor.getString("name");
+                     
+                     JSONObject objmessage = objcommit.getJSONObject("message");
+                     String message = objmessage.getString("message");
+                     
+                     JSONObject objCommit = currentObj.getJSONObject("commit");
+                     String commitMessage = objCommit.getString("message");
+                     Log.d("sha", sha);
+                     Log.d("name", name);
+                     Log.d("message", message);
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+ 
+            return null;
+        }
+
+    }
+}

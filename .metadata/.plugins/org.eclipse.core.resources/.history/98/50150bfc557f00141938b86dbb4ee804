@@ -1,0 +1,10 @@
+package test.employment.phototap;
+
+public class LongOperation {
+
+	public void execute(String url) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
